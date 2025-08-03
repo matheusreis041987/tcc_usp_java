@@ -65,6 +65,53 @@ public class ResponsavelController {
 	}
 	
 	
+	@DeleteMapping("/deletar-responsavel/{id}")
+	public ResponseEntity deletar(@PathVariable("id") Long id) {
+		return service.consultarPorId(id).map(entity -> {
+			service.deletar(entity);
+			return new ResponseEntity(HttpStatus.NO_CONTENT);
+		}).orElseGet(() -> ResponseEntity.badRequest().body(
+				"O id do responsavel informado não foi encontrado na base de dados, por isso não pode ser excluído."));
+	}
+	
+	@GetMapping("/buscar-responsavel")
+	public ResponseEntity buscar (
+			@RequestParam(value = "nome", required = false) String nome,
+			@RequestParam(value = "id", required = false) Long id,
+			@RequestParam(value = "endereco", required = false) String endereco,
+			@RequestParam(value = "cep", required = false) String cep,
+			@RequestParam(value = "uf", required = false) String uf,
+			@RequestParam(value = "cidade", required = false) String cidade) {
+		Responsavel responsavelFiltro = new Responsavel();
+		responsavelFiltro.setCep(cep);
+		responsavelFiltro.setCidade(cidade);
+		responsavelFiltro.setEndereco(endereco);
+		responsavelFiltro.setNome(nome);
+		responsavelFiltro.setUf(uf);
+		responsavelFiltro.setId(id);
+		List<Responsavel> responsaveis = service.buscar(responsavelFiltro);
+		return ResponseEntity.ok(responsaveis);
+		
+		
+	}
+	 
+	@PutMapping("/atualizar-responsavel/{id}")
+	public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ResponsavelDTO dto) {
+		
+		return service.consultarPorId(id).map(entity -> {
+			try {
+				Responsavel responsavel = converter(dto);
+				responsavel.setId(entity.getId());
+				service.atualizar(responsavel);
+				return ResponseEntity.ok(responsavel);
+			} catch (RegraNegocioException regraNegocioException) {
+				return ResponseEntity.badRequest().body(regraNegocioException.getMessage());
+			}
+		}).orElseGet(() -> ResponseEntity.badRequest()
+				.body( "O id do responsável informado não foi encontrado na base."));
+		
+	}
+	
 	
 	
 }
