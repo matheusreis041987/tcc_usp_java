@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-
+/*
 @Entity
 @Table(name= "processo", schema = "sch_processos")
 public class Processo {
@@ -167,3 +167,4 @@ public class Processo {
 	
 	
 }
+*/

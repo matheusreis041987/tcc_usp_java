@@ -20,10 +20,16 @@ import com.tcc.usp.api.exception.RegraNegocioException;
 import com.tcc.usp.api.model.entity.Responsavel;
 import com.tcc.usp.api.service.ResponsavelService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping("/api/responsavel")
 @CrossOrigin(origins = "*") 
+@Tag (name = "Responsáveis", description = "Endpoint para tratamento das informações dos Responsáveis.")
 public class ResponsavelController {
 	
 	ResponsavelService service;
@@ -51,7 +57,12 @@ public class ResponsavelController {
 		return responsavel;
 	}
 
-	@PostMapping("/salvar-responsavel")
+	
+	@Operation(summary = "Salvar Responsáveis", description = "Salva no sistema os responsáveis")
+    @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")
+	@ApiResponse(responseCode = "400", description = "Problema na requisição")
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+   	@PostMapping("/salvar-responsavel")
 	public ResponseEntity salvar (@RequestBody ResponsavelDTO dto) {
 		
 			try {
@@ -65,6 +76,10 @@ public class ResponsavelController {
 	}
 	
 	
+	@Operation(summary = "Deletar Responsáveis", description = "Deletar um responsável do sistema")
+    @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")
+	@ApiResponse(responseCode = "400", description = "Problema na requisição")
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
 	@DeleteMapping("/deletar-responsavel/{id}")
 	public ResponseEntity deletar(@PathVariable("id") Long id) {
 		return service.consultarPorId(id).map(entity -> {
@@ -74,6 +89,11 @@ public class ResponsavelController {
 				"O id do responsavel informado não foi encontrado na base de dados, por isso não pode ser excluído."));
 	}
 	
+	
+	@Operation(summary = "Buscar Responsáveis", description = "Buscar um ou mais responsáveis do sistema")
+    @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")
+	@ApiResponse(responseCode = "400", description = "Problema na requisição")
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
 	@GetMapping("/buscar-responsavel")
 	public ResponseEntity buscar (
 			@RequestParam(value = "nome", required = false) String nome,
@@ -95,6 +115,10 @@ public class ResponsavelController {
 		
 	}
 	 
+	@Operation(summary = "Atualizar Responsáveis", description = "Atualizar as informações de responsável do sistema")
+    @ApiResponse(responseCode = "200", description = "Operação bem-sucedida")
+	@ApiResponse(responseCode = "400", description = "Problema na requisição")
+    @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
 	@PutMapping("/atualizar-responsavel/{id}")
 	public ResponseEntity atualizar(@PathVariable("id") Long id, @RequestBody ResponsavelDTO dto) {
 		
